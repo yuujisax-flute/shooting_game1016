@@ -1,0 +1,152 @@
+
+[
+  {
+    "id": 1,
+    "name": "富士山",
+    "elevation": 3776,
+    "difficulty": "初級",
+    "image": "images/fuji.png",
+    "highlights": [
+      "日本最高峰からのご来光",
+      "火口を一周するお鉢巡り",
+      "雲海を見下ろす絶景"
+    ],
+    "routes": [
+      {
+        "name": "吉田ルート",
+        "time_required": "1泊2日",
+        "description": "最も登山者が多く、山小屋も充実している人気のルート。初心者におすすめ。",
+        "details": [
+          {"from": "富士スバルライン五合目", "to": "八合目", "duration": 300},
+          {"from": "八合目", "to": "山頂", "duration": 180}
+        ]
+      },
+      {
+        "name": "富士宮ルート",
+        "time_required": "1泊2日",
+        "description": "山頂までの距離が最も短いが、全体的に傾斜が急なルート。",
+        "details": [
+          {"from": "富士宮口五合目", "to": "山頂", "duration": 300}
+        ]
+      }
+    ],
+    "dangers": [
+      "高山病",
+      "夏でも発生する急な天候悪化（落雷、強風）",
+      "弾丸登山による体力消耗"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "北岳",
+    "elevation": 3193,
+    "difficulty": "中級",
+    "image": "images/kitadake.png",
+    "highlights": [
+      "南アルプスの盟主",
+      "高山植物の宝庫「お花畑」",
+      "富士山、北アルプス、中央アルプスを望む大パノラマ"
+    ],
+    "routes": [
+      {
+        "name": "広河原～白根御池小屋～北岳",
+        "time_required": "1泊2日",
+        "description": "最も一般的なルート。白根御池小屋を経由して山頂を目指す。",
+        "details": [
+          {"from": "広河原", "to": "白根御池小屋", "duration": 240},
+          {"from": "白根御池小屋", "to": "北岳山頂", "duration": 240}
+        ]
+      }
+    ],
+    "dangers": [
+      "吊り橋やハシゴ場",
+      "稜線での強風",
+      "残雪期の滑落リスク"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "奥穂高岳",
+    "elevation": 3190,
+    "difficulty": "上級",
+    "image": "images/okuhotakadake.png",
+    "highlights": [
+      "北アルプスの最高峰",
+      "スリル満点の岩稜歩き",
+      "涸沢カールから望むモルゲンロート"
+    ],
+    "routes": [
+      {
+        "name": "上高地～涸沢～ザイテングラート",
+        "time_required": "2泊3日",
+        "description": "涸沢カールを経由する最も人気のあるルート。ザイテングラートは急な岩場。",
+        "details": [
+          {"from": "上高地", "to": "涸沢", "duration": 360},
+          {"from": "涸沢", "to": "穂高岳山荘", "duration": 180},
+          {"from": "穂高岳山荘", "to": "奥穂高岳山頂", "duration": 60}
+        ]
+      }
+    ],
+    "dangers": [
+      "ザイテングラートの岩場",
+      "ハシゴ、鎖場の連続",
+      "天候急変による視界不良と滑落"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "間ノ岳",
+    "elevation": 3190,
+    "difficulty": "中級",
+    "image": "images/ainodake.png",
+    "highlights": [
+      "日本で3番目の高峰",
+      "北岳と農鳥岳を結ぶ長大な稜線",
+      "高山植物とライチョウ"
+    ],
+    "routes": [
+      {
+        "name": "北岳～間ノ岳 縦走",
+        "time_required": "1泊2日～2泊3日",
+        "description": "北岳から稜線を歩いて間ノ岳へ至る。壮大な景色が続くが、距離が長い。",
+        "details": [
+          {"from": "北岳山荘", "to": "間ノ岳山頂", "duration": 90}
+        ]
+      }
+    ],
+    "dangers": [
+      "長い稜線歩きによる体力消耗",
+      "悪天候時の逃げ場が少ない",
+      "積雪期のルートファインディング"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "槍ヶ岳",
+    "elevation": 3180,
+    "difficulty": "上級",
+    "image": "images/yarigatake.png",
+    "highlights": [
+      "天を突く象徴的な尖峰",
+      "山頂直下のスリリングなハシゴ",
+      "360度の大パノラマ"
+    ],
+    "routes": [
+      {
+        "name": "上高地～槍沢ルート",
+        "time_required": "2泊3日",
+        "description": "最も一般的なルート。槍沢ロッジを経由して山頂を目指す。",
+        "details": [
+          {"from": "上高地", "to": "槍沢ロッジ", "duration": 300},
+          {"from": "槍沢ロッジ", "to": "槍ヶ岳山荘", "duration": 300},
+          {"from": "槍ヶ岳山荘", "to": "槍ヶ岳山頂", "duration": 30}
+        ]
+      }
+    ],
+    "dangers": [
+      "山頂直下の垂直なハシゴ",
+      "登山者が多く、渋滞や落石の危険",
+      "雪渓のトラバース"
+    ]
+  }
+]

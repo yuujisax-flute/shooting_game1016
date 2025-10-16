@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>山の詳細 | 日本の3000m峰</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <main id="mountain-detail" class="main-detail">
+    <div class="header-detail">
+      <img id="mountain-image" class="image-detail" alt="">
+      <h1 id="mountain-name"></h1>
+      <p id="mountain-elevation"></p>
+      <span id="difficulty-badge"></span>
+    </div>
+
+    <div class="container-detail">
+      <section class="section-detail">
+        <h2 class="section-title-detail">見どころ</h2>
+        <ul id="highlights-list" class="highlight-list-detail"></ul>
+      </section>
+
+      <section class="section-detail">
+        <h2 class="section-title-detail">登山ルート</h2>
+        <div id="routes-container"></div>
+      </section>
+
+      <section class="section-detail">
+        <h2 class="section-title-detail">危険箇所</h2>
+        <ul id="dangers-list" class="danger-list-detail"></ul>
+      </section>
+    </div>
+
+    <div class="back-link-container-detail">
+      <a href="index.html" class="back-link-detail">&larr; 山の一覧に戻る</a>
+    </div>
+  </main>
+
+  <script src="js/mountain.js"></script>
+</body>
+</html>
