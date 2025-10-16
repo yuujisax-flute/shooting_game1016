@@ -5,6 +5,7 @@ const ctx = canvas.getContext('2d');
 let score = 0;
 let lives = 3;
 let gameOver = false;
+let playerHit = false;
 
 // --- Game Objects --- //
 
@@ -14,41 +15,45 @@ const player = {
     y: canvas.height - 60,
     width: 50,
     height: 50,
-    color: 'orange',
+    emoji: '🦁',
     speed: 8,
-    dx: 0
+    dx: 0,
+    fontSize: '48px'
 };
 
 // Player Projectile
 const projectile = {
     x: 0,
     y: 0,
-    width: 5,
-    height: 15,
-    color: 'yellow',
+    width: 30, // Adjusted for emoji
+    height: 30,
+    emoji: '🔥',
     speed: 10,
-    active: false // A projectile is only on screen when active
+    active: false,
+    fontSize: '28px'
 };
 
 // Enemy Projectiles
 const enemyProjectiles = [];
 const enemyProjectileInfo = {
-    width: 5,
-    height: 15,
-    color: 'red',
-    speed: 5
+    width: 30,
+    height: 30,
+    emoji: '💧', // Water drop to counter fire
+    speed: 5,
+    fontSize: '28px'
 };
 
 // UFO
 const ufo = {
     x: 0,
-    y: 30,
+    y: 55, // Adjusted y-pos for emoji rendering
     width: 60,
-    height: 25,
-    color: 'magenta',
+    height: 40,
+    emoji: '🛸',
     speed: 3,
     active: false,
-    points: 100
+    points: 100,
+    fontSize: '40px'
 };
 
 // Barriers
@@ -64,12 +69,13 @@ const barrierInfo = {
 // Enemies
 const enemyInfo = {
     width: 50,
-    height: 30,
-    color: 'lightgreen',
+    height: 50,
+    emoji: '👹',
     padding: 15,
     rowCount: 3,
     colCount: 8,
-    speed: 2
+    speed: 2,
+    fontSize: '42px'
 };
 
 const enemies = [];
@@ -80,11 +86,12 @@ function createEnemies() {
         for (let r = 0; r < enemyInfo.rowCount; r++) {
             enemies.push({
                 x: c * (enemyInfo.width + enemyInfo.padding) + 60,
-                y: r * (enemyInfo.height + enemyInfo.padding) + 50,
+                y: r * (enemyInfo.height + enemyInfo.padding) + 70, // Adjust y for emoji rendering
                 width: enemyInfo.width,
                 height: enemyInfo.height,
-                color: enemyInfo.color,
-                dx: enemyInfo.speed
+                emoji: enemyInfo.emoji,
+                dx: enemyInfo.speed,
+                fontSize: enemyInfo.fontSize
             });
         }
     }
@@ -120,7 +127,6 @@ createBarriers();
 function enemyShoot() {
     if (gameOver || enemies.length === 0) return;
 
-    // Find bottom-most enemies
     const bottomEnemies = [];
     for (let c = 0; c < enemyInfo.colCount; c++) {
         const columnEnemies = enemies.filter(e => 
@@ -134,27 +140,21 @@ function enemyShoot() {
 
     if (bottomEnemies.length === 0) return;
 
-    // Pick a random enemy from the bottom row to shoot
     const shootingEnemy = bottomEnemies[Math.floor(Math.random() * bottomEnemies.length)];
 
     enemyProjectiles.push({
         x: shootingEnemy.x + shootingEnemy.width / 2 - enemyProjectileInfo.width / 2,
-        y: shootingEnemy.y + shootingEnemy.height,
-        width: enemyProjectileInfo.width,
-        height: enemyProjectileInfo.height,
-        color: enemyProjectileInfo.color,
-        speed: enemyProjectileInfo.speed
+        y: shootingEnemy.y,
+        ...enemyProjectileInfo
     });
 }
 
-const enemyShootingInterval = setInterval(enemyShoot, 2000); // Every 2 seconds
-
+const enemyShootingInterval = setInterval(enemyShoot, 2000);
 
 // --- UFO Activation --- //
 function activateUfo() {
     if (!ufo.active) {
         ufo.active = true;
-        // Start from left or right
         if (Math.random() > 0.5) {
             ufo.x = -ufo.width;
             ufo.speed = Math.abs(ufo.speed);
@@ -164,51 +164,54 @@ function activateUfo() {
         }
     }
 }
-// Activate UFO periodically
-const ufoInterval = setInterval(activateUfo, 15000); // Every 15 seconds
-
+const ufoInterval = setInterval(activateUfo, 15000);
 
 // --- Drawing --- //
 
 function drawPlayer() {
-    ctx.fillStyle = player.color;
-    ctx.fillRect(player.x, player.y, player.width, player.height);
+    if (playerHit) {
+        ctx.font = player.fontSize;
+        ctx.fillText('💥', player.x, player.y);
+    } else {
+        ctx.font = player.fontSize;
+        ctx.fillText(player.emoji, player.x, player.y);
+    }
 }
 
 function drawProjectile() {
     if (projectile.active) {
-        ctx.fillStyle = projectile.color;
-        ctx.fillRect(projectile.x, projectile.y, projectile.width, projectile.height);
+        ctx.font = projectile.fontSize;
+        ctx.fillText(projectile.emoji, projectile.x, projectile.y);
     }
 }
 
 function drawEnemyProjectiles() {
     enemyProjectiles.forEach(p => {
-        ctx.fillStyle = p.color;
-        ctx.fillRect(p.x, p.y, p.width, p.height);
+        ctx.font = p.fontSize;
+        ctx.fillText(p.emoji, p.x, p.y);
     });
 }
 
 function drawBarriers() {
     barriers.forEach(b => {
         ctx.fillStyle = b.color;
-        ctx.globalAlpha = b.health / barrierInfo.health; // Fade as it gets damaged
+        ctx.globalAlpha = b.health / barrierInfo.health;
         ctx.fillRect(b.x, b.y, b.width, b.height);
     });
-    ctx.globalAlpha = 1.0; // Reset alpha
+    ctx.globalAlpha = 1.0;
 }
 
 function drawEnemies() {
     enemies.forEach(enemy => {
-        ctx.fillStyle = enemy.color;
-        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+        ctx.font = enemy.fontSize;
+        ctx.fillText(enemy.emoji, enemy.x, enemy.y);
     });
 }
 
 function drawUfo() {
     if (ufo.active) {
-        ctx.fillStyle = ufo.color;
-        ctx.fillRect(ufo.x, ufo.y, ufo.width, ufo.height);
+        ctx.font = ufo.fontSize;
+        ctx.fillText(ufo.emoji, ufo.x, ufo.y);
     }
 }
 
@@ -227,52 +230,39 @@ function drawLives() {
 function drawGameOver() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     ctx.font = '60px Arial';
     ctx.fillStyle = 'red';
     ctx.textAlign = 'center';
     ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
-
     ctx.font = '20px Arial';
     ctx.fillStyle = 'white';
     ctx.fillText('Press Enter to Restart', canvas.width / 2, canvas.height / 2 + 50);
-    ctx.textAlign = 'left'; // Reset alignment
+    ctx.textAlign = 'left';
 }
 
 function clear() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-
 // --- Movement and Updates --- //
 
 function movePlayer() {
     player.x += player.dx;
-
-    // Wall detection
-    if (player.x < 0) {
-        player.x = 0;
-    }
-    if (player.x + player.width > canvas.width) {
-        player.x = canvas.width - player.width;
-    }
+    if (player.x < 0) player.x = 0;
+    if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
 }
 
 function moveProjectile() {
     if (projectile.active) {
         projectile.y -= projectile.speed;
-        if (projectile.y < 0) {
-            projectile.active = false;
-        }
+        if (projectile.y < 0) projectile.active = false;
     }
 }
 
 function moveEnemyProjectiles() {
     enemyProjectiles.forEach((p, index) => {
         p.y += p.speed;
-        if (p.y > canvas.height) {
-            enemyProjectiles.splice(index, 1);
-        }
+        if (p.y > canvas.height) enemyProjectiles.splice(index, 1);
     });
 }
 
@@ -280,15 +270,13 @@ function moveEnemies() {
     let moveDown = false;
     enemies.forEach(enemy => {
         enemy.x += enemy.dx;
-        if (enemy.x + enemy.width > canvas.width || enemy.x < 0) {
-            moveDown = true;
-        }
+        if (enemy.x + enemy.width > canvas.width || enemy.x < 0) moveDown = true;
     });
 
     if (moveDown) {
         enemies.forEach(enemy => {
             enemy.dx *= -1;
-            enemy.y += enemy.height;
+            enemy.y += enemy.height / 2; // Move down less steeply
         });
     }
 }
@@ -296,11 +284,7 @@ function moveEnemies() {
 function moveUfo() {
     if (ufo.active) {
         ufo.x += ufo.speed;
-        // Deactivate if it goes off screen
-        if (ufo.speed > 0 && ufo.x > canvas.width) {
-            ufo.active = false;
-        }
-        if (ufo.speed < 0 && ufo.x + ufo.width < 0) {
+        if ((ufo.speed > 0 && ufo.x > canvas.width) || (ufo.speed < 0 && ufo.x + ufo.width < 0)) {
             ufo.active = false;
         }
     }
@@ -312,12 +296,7 @@ function checkCollisions() {
     if (projectile.active) {
         // vs Enemies
         enemies.forEach((enemy, index) => {
-            if (
-                projectile.x < enemy.x + enemy.width &&
-                projectile.x + projectile.width > enemy.x &&
-                projectile.y < enemy.y + enemy.height &&
-                projectile.y + projectile.height > enemy.y
-            ) {
+            if (isColliding(projectile, enemy)) {
                 projectile.active = false;
                 enemies.splice(index, 1);
                 score += 10;
@@ -325,13 +304,7 @@ function checkCollisions() {
         });
 
         // vs UFO
-        if (
-            ufo.active &&
-            projectile.x < ufo.x + ufo.width &&
-            projectile.x + projectile.width > ufo.x &&
-            projectile.y < ufo.y + ufo.height &&
-            projectile.y + projectile.height > ufo.y
-        ) {
+        if (ufo.active && isColliding(projectile, ufo)) {
             projectile.active = false;
             ufo.active = false;
             score += ufo.points;
@@ -339,17 +312,10 @@ function checkCollisions() {
 
         // vs Barriers
         barriers.forEach((b, index) => {
-            if (
-                projectile.x < b.x + b.width &&
-                projectile.x + projectile.width > b.x &&
-                projectile.y < b.y + b.height &&
-                projectile.y + projectile.height > b.y
-            ) {
+            if (isColliding(projectile, b)) {
                 projectile.active = false;
                 b.health--;
-                if (b.health <= 0) {
-                    barriers.splice(index, 1);
-                }
+                if (b.health <= 0) barriers.splice(index, 1);
             }
         });
     }
@@ -357,38 +323,34 @@ function checkCollisions() {
     // Enemy projectile collisions
     enemyProjectiles.forEach((p, pIndex) => {
         // vs Player
-        if (
-            p.x < player.x + player.width &&
-            p.x + p.width > player.x &&
-            p.y < player.y + player.height &&
-            p.y + p.height > player.y
-        ) {
+        if (isColliding(p, player)) {
             enemyProjectiles.splice(pIndex, 1);
-            lives--;
-            player.color = 'red';
-            setTimeout(() => { player.color = 'orange'; }, 200);
-            return; // Exit after one hit per frame
+            if (!playerHit) { // Prevent multiple hits in quick succession
+                lives--;
+                playerHit = true;
+                setTimeout(() => { playerHit = false; }, 500);
+            }
+            return;
         }
 
         // vs Barriers
         barriers.forEach((b, bIndex) => {
-            if (
-                p.x < b.x + b.width &&
-                p.x + p.width > b.x &&
-                p.y < b.y + b.height &&
-                p.y + p.height > b.y
-            ) {
+            if (isColliding(p, b)) {
                 enemyProjectiles.splice(pIndex, 1);
                 b.health--;
-                if (b.health <= 0) {
-                    barriers.splice(bIndex, 1);
-                }
-                return; // Exit after one hit per frame
+                if (b.health <= 0) barriers.splice(bIndex, 1);
+                return;
             }
         });
     });
 }
 
+function isColliding(obj1, obj2) {
+    return obj1.x < obj2.x + obj2.width &&
+           obj1.x + obj1.width > obj2.x &&
+           obj1.y < obj2.y + obj2.height &&
+           obj1.y + obj1.height > obj2.y;
+}
 
 // --- Main Game Loop --- //
 
@@ -429,19 +391,16 @@ function restartGame() {
     gameOver = false;
     lives = 3;
     score = 0;
+    playerHit = false;
     createEnemies();
     createBarriers();
-    // Reset player position
     player.x = canvas.width / 2 - 25;
     player.y = canvas.height - 60;
-    // Clear projectiles
     projectile.active = false;
     enemyProjectiles.length = 0;
-    // Hide UFO
     ufo.active = false;
     update();
 }
-
 
 // --- Keyboard Input --- //
 
@@ -449,7 +408,7 @@ function shoot() {
     if (!projectile.active) {
         projectile.active = true;
         projectile.x = player.x + player.width / 2 - projectile.width / 2;
-        projectile.y = player.y;
+        projectile.y = player.y - player.height / 2;
     }
 }
 
@@ -458,23 +417,13 @@ function keyDown(e) {
         restartGame();
         return;
     }
-
-    if (e.key === 'ArrowRight' || e.key === 'Right') {
-        player.dx = player.speed;
-    } else if (e.key === 'ArrowLeft' || e.key === 'Left') {
-        player.dx = -player.speed;
-    } else if (e.code === 'Space') {
-        shoot();
-    }
+    if (e.key === 'ArrowRight' || e.key === 'Right') player.dx = player.speed;
+    else if (e.key === 'ArrowLeft' || e.key === 'Left') player.dx = -player.speed;
+    else if (e.code === 'Space') shoot();
 }
 
 function keyUp(e) {
-    if (
-        e.key === 'ArrowRight' ||
-        e.key === 'Right' ||
-        e.key === 'ArrowLeft' ||
-        e.key === 'Left'
-    ) {
+    if (e.key === 'ArrowRight' || e.key === 'Right' || e.key === 'ArrowLeft' || e.key === 'Left') {
         player.dx = 0;
     }
 }
